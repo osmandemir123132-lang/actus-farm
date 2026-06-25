@@ -76,7 +76,7 @@ public class FarmBuilder {
 
                     // Y+2, Y+5, Y+8 ... : İp (kaktüsün hizası, kaktüs büyüyünce buraya çarpar)
                     BlockPos ipPoz = baslangicPos.add(offsetX, 2 + katOffset, offsetZ);
-                    adimlar.add(new BuildStep(ipPoz, Blocks.STRING.getDefaultState(), Items.STRING));
+                    adimlar.add(new BuildStep(ipPoz, Blocks.TRIPWIRE.getDefaultState(), Items.STRING));
 
                     // Y+3, Y+6, Y+9 ... : Kum (ipin üstüne, bir sonraki katın zemini)
                     BlockPos kumPoz = baslangicPos.add(offsetX, 3 + katOffset, offsetZ);

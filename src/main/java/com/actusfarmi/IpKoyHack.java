@@ -133,7 +133,7 @@ public class IpKoyHack {
 
                     for (BlockPos yan : yanlar) {
                         // Zaten ip var mı?
-                        if (world.getBlockState(yan).getBlock() == Blocks.STRING) continue;
+                        if (world.getBlockState(yan).getBlock() == Blocks.TRIPWIRE) continue;
                         // Hava değil mi? (başka blok varsa koyma)
                         if (!world.getBlockState(yan).isAir()) continue;
                         // Zaten kuyrukta mı?
@@ -171,7 +171,7 @@ public class IpKoyHack {
             return;
         }
 
-        world.setBlockState(pos, Blocks.STRING.getDefaultState());
+        world.setBlockState(pos, Blocks.TRIPWIRE.getDefaultState());
         envanterdanTuket(Items.STRING);
     }
 
