@@ -1,0 +1,24 @@
+name: Build Mod
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Java 21 kur
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Derle
+        run: chmod +x gradlew && ./gradlew build
+
+      - name: JAR dosyasını yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: actus-farmi-mod
+          path: build/libs/*.jar

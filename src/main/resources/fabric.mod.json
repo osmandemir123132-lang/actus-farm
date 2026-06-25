@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "actusfarmi",
+  "version": "1.0.0",
+  "name": "Aktüs Farmı",
+  "description": "Hardcore dünya için otomatik aktüs farm modu",
+  "authors": ["Sen"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.actusfarmi.ActusFarmiMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.5",
+    "fabric-api": "*",
+    "minecraft": "1.21.1"
+  }
+}

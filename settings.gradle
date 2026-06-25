@@ -1,0 +1,24 @@
+pluginManagement {
+	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		maven {
+			name = 'Forge'
+			url = 'https://files.minecraftforge.net/maven'
+		}
+		mavenCentral()
+		gradlePluginPortal()
+	}
+	// fabric-loom plugin'inin doğru group ID'sini burada eşle
+	resolutionStrategy {
+		eachPlugin {
+			if (requested.id.id == 'fabric-loom') {
+				useModule("net.fabricmc:fabric-loom:${requested.version}")
+			}
+		}
+	}
+}
+
+rootProject.name = 'actus-farmi'
