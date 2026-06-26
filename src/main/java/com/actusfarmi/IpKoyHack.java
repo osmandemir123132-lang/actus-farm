@@ -34,12 +34,13 @@ public class IpKoyHack {
     private static final int TARAMA_YARICAP = 8;
 
     // Kaç tick'te bir kaktüs taraması yapılır
-    private static final int TARAMA_ARALIGI = 20;
+    private static final int TARAMA_ARALIGI = 40;
 
-    // İpler arası minimum tick gecikmesi (spam koruması, anti-cheat bypass)
+    // İpler arası gecikme — normal insan sağ tık hızı gibi (0.5-1.2 saniye)
+    // 20 tick = 1 saniye
     private int sonrakiIpTick = 0;
-    private static final int MIN_GECIKME = 4;
-    private static final int MAX_GECIKME = 8;
+    private static final int MIN_GECIKME = 10;  // 0.5sn
+    private static final int MAX_GECIKME = 24;  // 1.2sn
 
     // Yerleştirilecek ip pozisyonları kuyruğu
     private final Queue<BlockPos> kuyruk = new LinkedList<>();
