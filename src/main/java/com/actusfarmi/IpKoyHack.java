@@ -36,11 +36,10 @@ public class IpKoyHack {
     // Kaç tick'te bir kaktüs taraması yapılır
     private static final int TARAMA_ARALIGI = 40;
 
-    // İpler arası gecikme — normal insan sağ tık hızı gibi (0.5-1.2 saniye)
-    // 20 tick = 1 saniye
+    // İpler arası gecikme (6-12 tick = 0.3-0.6sn — Vulcan bypass için yeterli)
     private int sonrakiIpTick = 0;
-    private static final int MIN_GECIKME = 10;  // 0.5sn
-    private static final int MAX_GECIKME = 24;  // 1.2sn
+    private static final int MIN_GECIKME = 6;
+    private static final int MAX_GECIKME = 12;
 
     // Yerleştirilecek ip pozisyonları kuyruğu
     private final Queue<BlockPos> kuyruk = new LinkedList<>();
@@ -131,6 +130,7 @@ public class IpKoyHack {
     /**
      * Belirtilen pozisyona ip koyar.
      * Sunucuya gerçek PlayerInteractBlockC2SPacket gönderir.
+     * Vulcan bypass: önce oyuncuyu o bloğa döndürür.
      */
     private void ipKoy(MinecraftClient mc, BlockPos pos) {
         ClientWorld world = mc.world;
@@ -147,18 +147,33 @@ public class IpKoyHack {
             return;
         }
 
+        // Hangi yüzden koyacağız — sadece yatay komşu
+        Direction koyYonu = koyulacakYuzBul(world, pos);
+        if (koyYonu == null) return;
+
+        BlockPos komsuPos = pos.offset(koyYonu.getOpposite());
+
+        // Hit noktası: komşu bloğun yüzünün ortası
+        Vec3d hitVec = Vec3d.ofCenter(komsuPos).add(
+            Vec3d.of(koyYonu.getVector()).multiply(0.5)
+        );
+
+        // Vulcan bypass: oyuncuyu hedef bloğa baktır (yaw/pitch hesapla)
+        Vec3d gozPos = player.getEyePos();
+        Vec3d fark = hitVec.subtract(gozPos);
+        double yatayUzaklik = Math.sqrt(fark.x * fark.x + fark.z * fark.z);
+        float yaw = (float)(Math.toDegrees(Math.atan2(-fark.x, fark.z)));
+        float pitch = (float)(Math.toDegrees(-Math.atan2(fark.y, yatayUzaklik)));
+
+        // Bakış açısını server'a gönder (PlayerMoveC2SPacket ile)
+        player.setYaw(yaw);
+        player.setPitch(pitch);
+
         // İp slotunu seç
         int eskiSlot = player.getInventory().selectedSlot;
         if (ipSlot < 9) {
             player.getInventory().selectedSlot = ipSlot;
         }
-
-        // Hangi yüzden koyacağız — en yakın komşu bloğu bul
-        Direction koyYonu = koyulacakYuzBul(world, pos);
-        if (koyYonu == null) return;
-
-        BlockPos komsuPos = pos.offset(koyYonu.getOpposite());
-        Vec3d hitVec = Vec3d.ofCenter(pos);
 
         // El swing
         player.swingHand(Hand.MAIN_HAND);
@@ -175,14 +190,21 @@ public class IpKoyHack {
 
     /**
      * Verilen pozisyonun etrafındaki katı bloğu bulur,
-     * o yüzden yerleştirme yönünü döndürür.
+     * SADECE yatay yönlere (N/S/E/W) bakar — üst/alt yön yok.
+     * Kaktüsün yanına koyması için şart.
      */
     private Direction koyulacakYuzBul(ClientWorld world, BlockPos pos) {
-        for (Direction dir : Direction.values()) {
+        // Sadece yatay yönler — UP/DOWN kesinlikle deneme
+        Direction[] yatayYonler = { Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST };
+        for (Direction dir : yatayYonler) {
             BlockPos komsu = pos.offset(dir);
             if (!world.getBlockState(komsu).isAir()) {
                 return dir;
             }
+        }
+        // Yatayda komşu bulunamazsa alta bak (zemin)
+        if (!world.getBlockState(pos.down()).isAir()) {
+            return Direction.DOWN;
         }
         return null;
     }
