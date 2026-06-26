@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "id": "actusfarmi",
   "version": "1.0.0",
-  "name": "Aktüs Farmı",
-  "description": "Hardcore dünya için otomatik aktüs farm modu",
+  "name": "IpKoy",
+  "description": "Kaktüslerin yanına otomatik ip koyar. Client-side, çok oyunculuda çalışır.",
   "authors": ["Sen"],
   "license": "MIT",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": ["com.actusfarmi.ActusFarmiMod"]
+    "client": ["com.actusfarmi.ActusFarmiMod"]
   },
   "depends": {
     "fabricloader": ">=0.16.5",
